@@ -1,0 +1,650 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PlannerPage</class>
+ <widget class="QWidget" name="PlannerPage">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1060</width>
+    <height>800</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Lịch Học</string>
+  </property>
+  <property name="styleSheet">
+   <string>
+    QWidget {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background-color: #f7f8fc;
+    }
+    QLabel#pageTitle {
+      color: #1a1f2e;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    QFrame.card {
+      background-color: #ffffff;
+      border-radius: 14px;
+      border: 1px solid #e2e8f0;
+    }
+   </string>
+  </property>
+  <layout class="QVBoxLayout" name="plannerMainLayout">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="contentsMargins">
+    <number>0</number>
+    <number>0</number>
+    <number>0</number>
+    <number>0</number>
+   </property>
+   <!-- Header Bar -->
+   <item>
+    <widget class="QFrame" name="headerBar">
+     <property name="minimumHeight"><number>72</number></property>
+     <property name="maximumHeight"><number>72</number></property>
+     <property name="styleSheet">
+      <string>QFrame#headerBar{background:#ffffff;border-bottom:1px solid #e2e8f0;}</string>
+     </property>
+     <layout class="QHBoxLayout">
+      <property name="contentsMargins">
+       <number>28</number>
+       <number>0</number>
+       <number>28</number>
+       <number>0</number>
+      </property>
+      <item>
+       <layout class="QVBoxLayout">
+        <property name="spacing"><number>2</number></property>
+        <item>
+         <widget class="QLabel" name="pageTitle">
+          <property name="text"><string>📅 Lịch Học</string></property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel">
+          <property name="text"><string>Quản lý và lên kế hoạch học tập</string></property>
+          <property name="styleSheet"><string>color:#718096;font-size:13px;</string></property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <spacer><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer>
+      </item>
+      <!-- View Mode Buttons -->
+      <item>
+       <widget class="QFrame">
+        <property name="styleSheet">
+         <string>QFrame{background:#f7f8fc;border-radius:8px;border:1px solid #e2e8f0;}</string>
+        </property>
+        <layout class="QHBoxLayout">
+         <property name="contentsMargins">
+          <number>3</number>
+          <number>3</number>
+          <number>3</number>
+          <number>3</number>
+         </property>
+         <property name="spacing"><number>2</number></property>
+         <item>
+          <widget class="QPushButton" name="btnWeekView">
+           <property name="text"><string>Tuần</string></property>
+           <property name="checkable"><bool>true</bool></property>
+           <property name="checked"><bool>true</bool></property>
+           <property name="minimumHeight"><number>32</number></property>
+           <property name="minimumWidth"><number>64</number></property>
+           <property name="styleSheet">
+            <string>
+             QPushButton{background:transparent;border:none;border-radius:6px;font-size:13px;color:#718096;}
+             QPushButton:checked{background:#ffffff;color:#2d3748;font-weight:bold;}
+             QPushButton:hover:!checked{background:#edf2f7;}
+            </string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnDayView">
+           <property name="text"><string>Ngày</string></property>
+           <property name="checkable"><bool>true</bool></property>
+           <property name="minimumHeight"><number>32</number></property>
+           <property name="minimumWidth"><number>64</number></property>
+           <property name="styleSheet">
+            <string>
+             QPushButton{background:transparent;border:none;border-radius:6px;font-size:13px;color:#718096;}
+             QPushButton:checked{background:#ffffff;color:#2d3748;font-weight:bold;}
+             QPushButton:hover:!checked{background:#edf2f7;}
+            </string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <!-- Add Task Button -->
+      <item>
+       <widget class="QPushButton" name="btnAddTask">
+        <property name="text"><string>+ Thêm Nhiệm Vụ</string></property>
+        <property name="minimumHeight"><number>40</number></property>
+        <property name="styleSheet">
+         <string>
+          QPushButton{background:#4a6cf7;color:white;border:none;border-radius:10px;padding:0 18px;font-size:14px;font-weight:600;}
+          QPushButton:hover{background:#3b5bdb;}
+         </string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <!-- Main Content -->
+   <item>
+    <layout class="QHBoxLayout" name="plannerContent">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <property name="contentsMargins">
+      <number>24</number>
+      <number>20</number>
+      <number>24</number>
+      <number>20</number>
+     </property>
+     <!-- Left: Weekly Calendar -->
+     <item>
+      <layout class="QVBoxLayout">
+       <property name="spacing"><number>16</number></property>
+       <!-- Week Navigation -->
+       <item>
+        <widget class="QFrame">
+         <property name="styleSheet">
+          <string>QFrame{background:#ffffff;border-radius:14px;border:1px solid #e2e8f0;}</string>
+         </property>
+         <layout class="QVBoxLayout">
+          <property name="contentsMargins">
+           <number>16</number>
+           <number>16</number>
+           <number>16</number>
+           <number>16</number>
+          </property>
+          <property name="spacing"><number>12</number></property>
+          <!-- Month Nav -->
+          <item>
+           <layout class="QHBoxLayout">
+            <item>
+             <widget class="QPushButton" name="btnPrevWeek">
+              <property name="text"><string>‹</string></property>
+              <property name="minimumWidth"><number>32</number></property>
+              <property name="maximumWidth"><number>32</number></property>
+              <property name="minimumHeight"><number>32</number></property>
+              <property name="styleSheet">
+               <string>QPushButton{background:#f7f8fc;border:1px solid #e2e8f0;border-radius:6px;font-size:16px;color:#4a5568;}QPushButton:hover{background:#edf2f7;}</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="weekLabel">
+              <property name="text"><string>Tháng 4, 2026</string></property>
+              <property name="alignment"><set>Qt::AlignCenter</set></property>
+              <property name="styleSheet"><string>color:#1a1f2e;font-size:15px;font-weight:bold;</string></property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btnNextWeek">
+              <property name="text"><string>›</string></property>
+              <property name="minimumWidth"><number>32</number></property>
+              <property name="maximumWidth"><number>32</number></property>
+              <property name="minimumHeight"><number>32</number></property>
+              <property name="styleSheet">
+               <string>QPushButton{background:#f7f8fc;border:1px solid #e2e8f0;border-radius:6px;font-size:16px;color:#4a5568;}QPushButton:hover{background:#edf2f7;}</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <!-- Day Headers -->
+          <item>
+           <widget class="QTableWidget" name="weekCalendar">
+            <property name="rowCount"><number>6</number></property>
+            <property name="columnCount"><number>7</number></property>
+            <property name="minimumHeight"><number>300</number></property>
+            <property name="styleSheet">
+             <string>
+              QTableWidget {
+                border: none;
+                gridline-color: #f0f4f8;
+                background: transparent;
+              }
+              QTableWidget::item {
+                padding: 4px;
+                border-radius: 6px;
+              }
+              QTableWidget::item:selected {
+                background-color: #ebf4ff;
+                color: #2b6cb0;
+              }
+              QHeaderView::section {
+                background-color: #f7f8fc;
+                color: #718096;
+                font-size: 12px;
+                font-weight: bold;
+                border: none;
+                padding: 6px;
+              }
+             </string>
+            </property>
+            <column>
+             <property name="text"><string>T2</string></property>
+            </column>
+            <column>
+             <property name="text"><string>T3</string></property>
+            </column>
+            <column>
+             <property name="text"><string>T4</string></property>
+            </column>
+            <column>
+             <property name="text"><string>T5</string></property>
+            </column>
+            <column>
+             <property name="text"><string>T6</string></property>
+            </column>
+            <column>
+             <property name="text"><string>T7</string></property>
+            </column>
+            <column>
+             <property name="text"><string>CN</string></property>
+            </column>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <!-- Today's Schedule List -->
+       <item>
+        <widget class="QFrame">
+         <property name="styleSheet">
+          <string>QFrame{background:#ffffff;border-radius:14px;border:1px solid #e2e8f0;}</string>
+         </property>
+         <layout class="QVBoxLayout">
+          <property name="contentsMargins">
+           <number>16</number>
+           <number>16</number>
+           <number>16</number>
+           <number>16</number>
+          </property>
+          <property name="spacing"><number>12</number></property>
+          <item>
+           <widget class="QLabel">
+            <property name="text"><string>📋 Hôm Nay - Thứ 3, 28/04/2026</string></property>
+            <property name="styleSheet"><string>color:#1a1f2e;font-size:14px;font-weight:bold;</string></property>
+           </widget>
+          </item>
+          <!-- Task Items -->
+          <!-- Task 1 -->
+          <item>
+           <widget class="QFrame">
+            <property name="styleSheet">
+             <string>QFrame{background:#ebf8ff;border-radius:10px;border-left:4px solid #4a6cf7;}</string>
+            </property>
+            <layout class="QHBoxLayout">
+             <property name="contentsMargins"><number>12</number><number>10</number><number>12</number><number>10</number></property>
+             <item>
+              <layout class="QVBoxLayout">
+               <property name="spacing"><number>3</number></property>
+               <item>
+                <widget class="QLabel">
+                 <property name="text"><string>📐 Ôn tập Toán - Giải tích</string></property>
+                 <property name="styleSheet"><string>color:#1a1f2e;font-size:13px;font-weight:bold;background:transparent;border:none;</string></property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel">
+                 <property name="text"><string>07:00 - 08:30  ·  90 phút</string></property>
+                 <property name="styleSheet"><string>color:#4a6cf7;font-size:12px;background:transparent;border:none;</string></property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <spacer><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="task1Done">
+               <property name="styleSheet">
+                <string>QCheckBox::indicator{width:20px;height:20px;border-radius:5px;border:2px solid #4a6cf7;}QCheckBox::indicator:checked{background:#4a6cf7;}</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <!-- Task 2 -->
+          <item>
+           <widget class="QFrame">
+            <property name="styleSheet">
+             <string>QFrame{background:#f0fff4;border-radius:10px;border-left:4px solid #38a169;}</string>
+            </property>
+            <layout class="QHBoxLayout">
+             <property name="contentsMargins"><number>12</number><number>10</number><number>12</number><number>10</number></property>
+             <item>
+              <layout class="QVBoxLayout">
+               <property name="spacing"><number>3</number></property>
+               <item>
+                <widget class="QLabel">
+                 <property name="text"><string>🧪 Học Hóa - Phản ứng điện phân</string></property>
+                 <property name="styleSheet"><string>color:#1a1f2e;font-size:13px;font-weight:bold;background:transparent;border:none;</string></property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel">
+                 <property name="text"><string>09:00 - 10:30  ·  90 phút</string></property>
+                 <property name="styleSheet"><string>color:#38a169;font-size:12px;background:transparent;border:none;</string></property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <spacer><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="task2Done">
+               <property name="styleSheet">
+                <string>QCheckBox::indicator{width:20px;height:20px;border-radius:5px;border:2px solid #38a169;}QCheckBox::indicator:checked{background:#38a169;}</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <!-- Task 3 -->
+          <item>
+           <widget class="QFrame">
+            <property name="styleSheet">
+             <string>QFrame{background:#fff5f5;border-radius:10px;border-left:4px solid #e53e3e;}</string>
+            </property>
+            <layout class="QHBoxLayout">
+             <property name="contentsMargins"><number>12</number><number>10</number><number>12</number><number>10</number></property>
+             <item>
+              <layout class="QVBoxLayout">
+               <property name="spacing"><number>3</number></property>
+               <item>
+                <widget class="QLabel">
+                 <property name="text"><string>⚛️ Luyện Vật Lý - Điện học</string></property>
+                 <property name="styleSheet"><string>color:#1a1f2e;font-size:13px;font-weight:bold;background:transparent;border:none;</string></property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel">
+                 <property name="text"><string>14:00 - 15:30  ·  90 phút</string></property>
+                 <property name="styleSheet"><string>color:#e53e3e;font-size:12px;background:transparent;border:none;</string></property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <spacer><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="task3Done">
+               <property name="styleSheet">
+                <string>QCheckBox::indicator{width:20px;height:20px;border-radius:5px;border:2px solid #e53e3e;}QCheckBox::indicator:checked{background:#e53e3e;}</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <!-- Right Panel: Add Task Form + Stats -->
+     <item>
+      <layout class="QVBoxLayout">
+       <property name="spacing"><number>16</number></property>
+       <property name="contentsMargins"><number>16</number><number>0</number><number>0</number><number>0</number></property>
+       <!-- Add/Edit Task Form -->
+       <item>
+        <widget class="QFrame" name="addTaskForm">
+         <property name="minimumWidth"><number>280</number></property>
+         <property name="maximumWidth"><number>320</number></property>
+         <property name="styleSheet">
+          <string>QFrame{background:#ffffff;border-radius:14px;border:1px solid #e2e8f0;}</string>
+         </property>
+         <layout class="QVBoxLayout">
+          <property name="contentsMargins"><number>18</number><number>18</number><number>18</number><number>18</number></property>
+          <property name="spacing"><number>14</number></property>
+          <item>
+           <widget class="QLabel">
+            <property name="text"><string>➕ Thêm Nhiệm Vụ Mới</string></property>
+            <property name="styleSheet"><string>color:#1a1f2e;font-size:14px;font-weight:bold;</string></property>
+           </widget>
+          </item>
+          <!-- Task Name -->
+          <item>
+           <layout class="QVBoxLayout">
+            <property name="spacing"><number>5</number></property>
+            <item>
+             <widget class="QLabel">
+              <property name="text"><string>Tên nhiệm vụ *</string></property>
+              <property name="styleSheet"><string>color:#4a5568;font-size:12px;font-weight:600;</string></property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="taskNameInput">
+              <property name="placeholderText"><string>VD: Ôn tập Toán chương 3...</string></property>
+              <property name="minimumHeight"><number>38</number></property>
+              <property name="styleSheet">
+               <string>QLineEdit{background:#f7f8fc;border:1px solid #e2e8f0;border-radius:8px;padding:0 12px;font-size:13px;color:#2d3748;}QLineEdit:focus{border-color:#4a6cf7;background:#fff;}</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <!-- Subject -->
+          <item>
+           <layout class="QVBoxLayout">
+            <property name="spacing"><number>5</number></property>
+            <item>
+             <widget class="QLabel">
+              <property name="text"><string>Môn học</string></property>
+              <property name="styleSheet"><string>color:#4a5568;font-size:12px;font-weight:600;</string></property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="taskSubjectCombo">
+              <property name="minimumHeight"><number>38</number></property>
+              <property name="styleSheet">
+               <string>QComboBox{background:#f7f8fc;border:1px solid #e2e8f0;border-radius:8px;padding:0 12px;font-size:13px;color:#2d3748;}QComboBox:focus{border-color:#4a6cf7;}</string>
+              </property>
+              <item><property name="text"><string>📐 Toán học</string></property></item>
+              <item><property name="text"><string>⚛️ Vật lý</string></property></item>
+              <item><property name="text"><string>🧪 Hóa học</string></property></item>
+              <item><property name="text"><string>🌿 Sinh học</string></property></item>
+              <item><property name="text"><string>📖 Ngữ văn</string></property></item>
+              <item><property name="text"><string>🇬🇧 Tiếng Anh</string></property></item>
+              <item><property name="text"><string>🌍 Lịch sử</string></property></item>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <!-- Date & Time -->
+          <item>
+           <layout class="QHBoxLayout">
+            <property name="spacing"><number>10</number></property>
+            <item>
+             <layout class="QVBoxLayout">
+              <property name="spacing"><number>5</number></property>
+              <item>
+               <widget class="QLabel">
+                <property name="text"><string>Ngày</string></property>
+                <property name="styleSheet"><string>color:#4a5568;font-size:12px;font-weight:600;</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QDateEdit" name="taskDateEdit">
+                <property name="minimumHeight"><number>38</number></property>
+                <property name="calendarPopup"><bool>true</bool></property>
+                <property name="styleSheet">
+                 <string>QDateEdit{background:#f7f8fc;border:1px solid #e2e8f0;border-radius:8px;padding:0 10px;font-size:13px;color:#2d3748;}QDateEdit:focus{border-color:#4a6cf7;}</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QVBoxLayout">
+              <property name="spacing"><number>5</number></property>
+              <item>
+               <widget class="QLabel">
+                <property name="text"><string>Giờ bắt đầu</string></property>
+                <property name="styleSheet"><string>color:#4a5568;font-size:12px;font-weight:600;</string></property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QTimeEdit" name="taskTimeEdit">
+                <property name="minimumHeight"><number>38</number></property>
+                <property name="styleSheet">
+                 <string>QTimeEdit{background:#f7f8fc;border:1px solid #e2e8f0;border-radius:8px;padding:0 10px;font-size:13px;color:#2d3748;}QTimeEdit:focus{border-color:#4a6cf7;}</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <!-- Duration -->
+          <item>
+           <layout class="QVBoxLayout">
+            <property name="spacing"><number>5</number></property>
+            <item>
+             <widget class="QLabel">
+              <property name="text"><string>Thời lượng (phút)</string></property>
+              <property name="styleSheet"><string>color:#4a5568;font-size:12px;font-weight:600;</string></property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="taskDurationSpin">
+              <property name="minimum"><number>15</number></property>
+              <property name="maximum"><number>480</number></property>
+              <property name="value"><number>60</number></property>
+              <property name="singleStep"><number>15</number></property>
+              <property name="suffix"><string> phút</string></property>
+              <property name="minimumHeight"><number>38</number></property>
+              <property name="styleSheet">
+               <string>QSpinBox{background:#f7f8fc;border:1px solid #e2e8f0;border-radius:8px;padding:0 10px;font-size:13px;color:#2d3748;}QSpinBox:focus{border-color:#4a6cf7;}</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <!-- Priority -->
+          <item>
+           <layout class="QVBoxLayout">
+            <property name="spacing"><number>5</number></property>
+            <item>
+             <widget class="QLabel">
+              <property name="text"><string>Mức độ ưu tiên</string></property>
+              <property name="styleSheet"><string>color:#4a5568;font-size:12px;font-weight:600;</string></property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout">
+              <property name="spacing"><number>6</number></property>
+              <item>
+               <widget class="QPushButton" name="priorityHigh">
+                <property name="text"><string>🔴 Cao</string></property>
+                <property name="checkable"><bool>true</bool></property>
+                <property name="styleSheet">
+                 <string>QPushButton{background:#fff5f5;color:#c53030;border:1.5px solid #fed7d7;border-radius:8px;padding:6px;font-size:12px;}QPushButton:checked{background:#fed7d7;border-color:#fc8181;}</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="priorityMed">
+                <property name="text"><string>🟡 TB</string></property>
+                <property name="checkable"><bool>true</bool></property>
+                <property name="checked"><bool>true</bool></property>
+                <property name="styleSheet">
+                 <string>QPushButton{background:#fffff0;color:#744210;border:1.5px solid #fefcbf;border-radius:8px;padding:6px;font-size:12px;}QPushButton:checked{background:#fefcbf;border-color:#f6e05e;}</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="priorityLow">
+                <property name="text"><string>🟢 Thấp</string></property>
+                <property name="checkable"><bool>true</bool></property>
+                <property name="styleSheet">
+                 <string>QPushButton{background:#f0fff4;color:#276749;border:1.5px solid #c6f6d5;border-radius:8px;padding:6px;font-size:12px;}QPushButton:checked{background:#c6f6d5;border-color:#9ae6b4;}</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <!-- Notes -->
+          <item>
+           <layout class="QVBoxLayout">
+            <property name="spacing"><number>5</number></property>
+            <item>
+             <widget class="QLabel">
+              <property name="text"><string>Ghi chú</string></property>
+              <property name="styleSheet"><string>color:#4a5568;font-size:12px;font-weight:600;</string></property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPlainTextEdit" name="taskNotesInput">
+              <property name="placeholderText"><string>Ghi chú thêm...</string></property>
+              <property name="minimumHeight"><number>70</number></property>
+              <property name="maximumHeight"><number>70</number></property>
+              <property name="styleSheet">
+               <string>QPlainTextEdit{background:#f7f8fc;border:1px solid #e2e8f0;border-radius:8px;padding:8px;font-size:13px;color:#2d3748;}QPlainTextEdit:focus{border-color:#4a6cf7;background:#fff;}</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <!-- Buttons -->
+          <item>
+           <layout class="QHBoxLayout">
+            <property name="spacing"><number>8</number></property>
+            <item>
+             <widget class="QPushButton" name="btnCancelTask">
+              <property name="text"><string>Hủy</string></property>
+              <property name="minimumHeight"><number>40</number></property>
+              <property name="styleSheet">
+               <string>QPushButton{background:#f7f8fc;color:#4a5568;border:1px solid #e2e8f0;border-radius:10px;font-size:14px;}QPushButton:hover{background:#edf2f7;}</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btnSaveTask">
+              <property name="text"><string>💾 Lưu Nhiệm Vụ</string></property>
+              <property name="minimumHeight"><number>40</number></property>
+              <property name="styleSheet">
+               <string>QPushButton{background:#4a6cf7;color:white;border:none;border-radius:10px;font-size:14px;font-weight:600;}QPushButton:hover{background:#3b5bdb;}</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <spacer>
+         <property name="orientation"><enum>Qt::Vertical</enum></property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
