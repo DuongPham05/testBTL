@@ -66,18 +66,18 @@ class ChatController(BaseController):
     new_session_created = pyqtSignal(str)
 
     def __init__(self, main_window=None):
-        # Không gọi super().__init__() với BaseController vì BaseController đã có _load_ui,
-        # nhưng ta override setup_ui và connect_signals, và không dùng UI_FILE.
-        # Tuy nhiên để tương thích, gọi super và đặt UI_FILE = ""
+        # FIX: Khởi tạo các biến instance TRƯỚC khi gọi super().__init__()
+        # để setup_ui() và connect_signals() (được gọi bên trong super) có thể dùng chúng.
         self.UI_FILE = ""  # Không dùng file .ui
-        super().__init__()
         self.main_window = main_window
         self._chat_history = []
         self._typing_container = None
         self._current_bot_worker = None
 
-        self.setup_ui()
-        self.connect_signals()
+        # FIX: Chỉ gọi super().__init__() – BaseController sẽ tự gọi
+        # setup_ui() và connect_signals() đúng một lần.
+        # KHÔNG gọi self.setup_ui() hay self.connect_signals() thêm nữa.
+        super().__init__()
 
         self._append_message("👋 Xin chào! Tôi là trợ lý học tập. Bạn có thể nhờ tôi tạo lịch trình học tập hoặc roadmap cho bất kỳ môn học nào.", is_user=False)
 
@@ -135,12 +135,8 @@ class ChatController(BaseController):
     # ------------------------------------------------------------------
     def setup_ui(self):
         """Tạo các widget cho khung chat."""
-        # Vì BaseController có thể đã tạo layout, ta xóa layout cũ nếu có
-        if self.layout():
-            while self.layout().count():
-                item = self.layout().takeAt(0)
-                if item.widget():
-                    item.widget().deleteLater()
+        # FIX: Bỏ đoạn xóa layout cũ – không cần thiết vì setup_ui()
+        # chỉ được gọi đúng một lần bởi BaseController.__init__().
         self.main_layout = QVBoxLayout(self)
         self.main_layout.setContentsMargins(5, 5, 5, 5)
         self.main_layout.setSpacing(10)
